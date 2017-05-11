@@ -35,6 +35,15 @@ int main()
   uWS::Hub h;
 
   PID pid;
+  // This is manually tuned by trial and error.
+  // I initially started with the setting in lecture of 0.2 (P), 0.004 (I) and 3.0 (D).
+  // Using this, I found that it waver a lot on the track 1. Upon thinking more carefully,
+  // there might not be any systematic bias at all for our car in the simulator, I tried
+  // a couple of i values and found that it indeed works best with value to 0.
+  // Now, at (0.2, 0.0, 3.0), it already works very well, but I noticed that the car is
+  // still waving a bit. Based on my understanding of PID, it seems to be caused by P.
+  // So, I did a binary search on P values, starting at 0.1 (but now the steering is not
+  // sufficient in sharp corner), and then ended up finding 0.15 works well.
   pid.Init(0.15, 0., 3);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
